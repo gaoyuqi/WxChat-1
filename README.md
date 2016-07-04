@@ -3,14 +3,10 @@
 
 ### Usage
 
-`
-python2.7
+`python2.7`
 
-pip install -r requirement.txt
+`pip install -r requirement.txt`
 
-python chat.py
-
-`
 
 ### 说明
 

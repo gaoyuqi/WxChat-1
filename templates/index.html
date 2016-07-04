@@ -1,0 +1,156 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <!--[if IE]>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <![endif]-->
+    <title>网页版微信</title>
+    <!-- BOOTSTRAP CORE STYLE CSS -->
+    <link href="/static/assets/css/bootstrap.css" rel="stylesheet" />
+
+    <script type="text/javascript">
+        function selectUser(img, name) {
+            document.getElementById("UserId").innerHTML=name;
+            document.getElementById("ImgId").src = "/static/icon/icon_" + img + ".jpg";
+        }
+
+        function submitMsg() {
+
+            var http = new XMLHttpRequest();
+            var url = "/chat";
+            var nick =  document.getElementById("UserId").innerHTML;
+            var msg =   document.getElementById("msg").value;
+
+            var params = "msg=" + msg + "&nick=" + nick;
+            http.open("POST", url, true);
+
+            //Send the proper header information along with the request
+            http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+            http.onreadystatechange = function() {
+            //Call a function when the state changes.
+                if(http.readyState == 4 && http.status == 200) {
+                    <!--alert(http.responseText);-->
+                    document.getElementById("other_msg").innerHTML=http.responseText;
+                    document.getElementById("my_msg").innerHTML= msg;
+                    document.getElementById("msg").value = "";
+                }
+            }
+            http.send(params);
+        }
+    </script>
+
+</head>
+<body style="font-family:Verdana">
+  <div class="container">
+<div class="row " style="padding-top:40px;">
+    <h3 class="text-center" >网页版微信 </h3>
+    <br /><br />
+    <div class="col-md-8">
+        <div class="panel panel-info">
+            <div class="panel-heading" id = "UserId">
+                请选择好友
+            </div>
+            <div class="panel-body">
+<ul class="media-list">
+    　　　　　　
+                                    <li class="media">
+                                        <div class="media-body">
+
+                                            <div class="media">
+                                                <a class="pull-left" href="#">
+                                                    <img class="media-object img-circle "
+
+                                                         src="/static/icon/{{ "icon_" + myself + ".jpg" }}" />
+                                                </a>
+                                                <div class="media-body" id="my_msg">
+                                                    我的聊天
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </li>
+
+    <li class="media">
+
+                                        <div class="media-body">
+
+                                            <div class="media">
+                                                <a class="pull-left" href="#">
+                                                    <img class="media-object img-circle "
+                                                         id="ImgId"
+                                                         src="/static/icon/qr.png" />
+                                                </a>
+                                                <div class="media-body" id="other_msg">
+                                                    好友的聊天
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </li>
+                                </ul>
+            </div>
+            <div class="panel-footer">
+                <div class="input-group">
+
+                                    <input id="msg" type="text" class="form-control" placeholder="Enter Message" />
+                                    <br>
+
+
+
+                                    <span class="input-group-btn">
+                                        <button  class="btn btn-info" type="button" onclick="submitMsg();"> 发送
+                                        </button>
+                                    </span>
+
+                                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+          <div class="panel panel-primary">
+            <div class="panel-heading">
+               好友列表
+            </div>
+            <div class="panel-body">
+                <ul class="media-list">
+
+                    {% for user in contacts %}
+                                    <li class="media">
+
+                                        <div class="media-body">
+
+                                            <div class="media">
+                                                <!--<button onclick="selectUser('{{ user["UserName"] }}', '{{user["NickName"]}}');">-->
+                                                <a class="pull-left" onclick="selectUser('{{ user["UserName"] }}', '{{user["NickName"]}}');">
+                                                    <img
+                                                         class="media-object img-circle" style="max-height:40px;"
+                                                         src="/static/icon/{{ "icon_" + user["UserName"] + ".jpg"}}" />
+                                                </a>
+                                                <!--</button>-->
+                                                <div class="media-body">
+
+                                                     <h5>
+                                                         {{ user["NickName"]}}
+                                                     </h5>
+
+                                                   <small class="text-muted">{{ user["Alias"] }}</small>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </li>
+                    {% end %}
+                                </ul>
+                </div>
+            </div>
+
+    </div>
+</div>
+  </div>
+</body>
+</html>
